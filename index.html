@@ -8,7 +8,20 @@
   </head>
   <body>
     <main class="page-shell">
-      <section class="intro" aria-labelledby="page-title" data-home-screen>
+      <section class="gate-screen" data-gate-screen aria-labelledby="gate-title">
+        <p class="eyebrow">Før du slipper inn</p>
+        <h1 id="gate-title">Hva er fornavnet på bursdagsbarnet?</h1>
+        <form class="gate-form" data-gate-form novalidate>
+          <label for="gate-answer">Svar</label>
+          <div class="answer-row">
+            <input id="gate-answer" name="gateAnswer" type="text" autocomplete="off" placeholder="Skriv navnet her">
+            <button type="submit">Lås opp</button>
+          </div>
+          <p class="feedback" data-gate-feedback aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="intro" aria-labelledby="page-title" data-home-screen hidden>
         <p class="eyebrow">Bursdagsoppdraget</p>
         <h1 id="page-title">Gratulerer med dagen, fineste kjæresten min.</h1>
         <p class="nickname">(cale potato, poteten i mitt liv, bæsj, gubben min)</p>
@@ -28,7 +41,7 @@
         </p>
       </section>
 
-      <section class="gift-grid" aria-label="Gaver" data-home-screen>
+      <section class="gift-grid" aria-label="Gaver" data-home-screen hidden>
         <article class="gift-card" data-gift-card="3">
           <div class="gift-topline">
             <span class="gift-number">Gave 3</span>

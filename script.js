@@ -65,6 +65,8 @@ const gifts = [
 const maxAttempts = 5;
 const unlockedDurationMs = 60 * 60 * 1000;
 const storageKey = "bursdagsgaver-state-v4";
+const gateStorageKey = "bursdagsgaver-gate-open";
+const gateAnswers = ["carl", "carl fredrik"];
 const unlockRequirements = {
   1: "2",
   2: "3",
@@ -179,6 +181,10 @@ const renderReveal = (element, gift) => {
   `;
 };
 
+const gateScreen = document.querySelector("[data-gate-screen]");
+const gateForm = document.querySelector("[data-gate-form]");
+const gateInput = gateForm.querySelector("input");
+const gateFeedback = document.querySelector("[data-gate-feedback]");
 const homeScreens = document.querySelectorAll("[data-home-screen]");
 const detailScreen = document.querySelector("[data-detail-screen]");
 const detailCard = document.querySelector("[data-detail-card]");
@@ -200,10 +206,16 @@ const reveal = document.querySelector("[data-detail-reveal]");
 const backButton = document.querySelector("[data-back-button]");
 
 const setHomeVisible = (isVisible) => {
+  gateScreen.hidden = true;
   homeScreens.forEach((screen) => {
     screen.hidden = !isVisible;
   });
   detailScreen.hidden = isVisible;
+};
+
+const openGate = () => {
+  sessionStorage.setItem(gateStorageKey, "true");
+  setHomeVisible(true);
 };
 
 const updateGiftStatusBadges = () => {
@@ -312,6 +324,26 @@ document.querySelectorAll("[data-open-gift]").forEach((button) => {
 
 giftState = loadGiftState();
 updateGiftStatusBadges();
+
+if (sessionStorage.getItem(gateStorageKey) === "true") {
+  setHomeVisible(true);
+}
+
+gateForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const guess = normalizeAnswer(gateInput.value);
+
+  if (gateAnswers.map(normalizeAnswer).includes(guess)) {
+    gateFeedback.textContent = "";
+    openGate();
+    return;
+  }
+
+  gateFeedback.textContent = "Ikke helt. Prøv igjen.";
+  gateInput.value = "";
+  gateInput.focus();
+});
 
 backButton.addEventListener("click", () => {
   updateGiftStatusBadges();

@@ -50,14 +50,36 @@ input {
   gap: 30px;
 }
 
-.intro {
-  max-width: 880px;
+.intro,
+.gate-screen {
   padding: 28px 0 6px;
   text-shadow: 0 2px 22px rgba(0, 0, 0, 0.72);
 }
 
+.intro {
+  max-width: 880px;
+}
+
+.gate-screen {
+  max-width: 880px;
+}
+
+[data-gate-screen][hidden],
 [data-home-screen][hidden] {
   display: none;
+}
+
+.gate-form {
+  max-width: 560px;
+  margin-top: 24px;
+  display: grid;
+  gap: 8px;
+}
+
+.gate-form label {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
 }
 
 .eyebrow {

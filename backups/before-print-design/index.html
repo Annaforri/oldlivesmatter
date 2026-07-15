@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bursdagsgaver</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="gate-screen" data-gate-screen aria-labelledby="gate-title">
+        <p class="eyebrow">Før du slipper inn</p>
+        <h1 id="gate-title">Hva er navnet på bursdagsbarnet?</h1>
+        <form class="gate-form" data-gate-form novalidate>
+          <label for="gate-answer">Svar</label>
+          <div class="answer-row">
+            <input id="gate-answer" name="gateAnswer" type="text" autocomplete="off" placeholder="Skriv navnet her">
+            <button type="submit">Lås opp</button>
+          </div>
+          <p class="feedback" data-gate-feedback aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="intro" aria-labelledby="page-title" data-home-screen hidden>
+        <p class="eyebrow">Bursdagsoppdraget</p>
+        <h1 id="page-title">Gratulerer med dagen, fineste kjæresten min.</h1>
+        <p class="nickname">(cale potato, poteten i mitt liv, bæsj, gubben min)</p>
+        <p class="description">
+          Under finner du ledetråder til 3 gaver. Du må selv skrive inn løsningsforslaget.
+          Hvis du skriver riktig, åpner gaven seg. Skriver du feil, vil den forbli skjult.
+          Klarer du å unlocke gaven?
+        </p>
+        <p class="note">
+          Gave nummer 3 er minst, og dermed også lettest å løse. Den må åpnes først.
+          Når gave 3 er åpnet, kan du prøve gave 2. Når gave 2 er åpnet, kan du til
+          slutt prøve gave 1.
+        </p>
+        <p class="warning">
+          NB! Hver gave har kun 5 forsøk på å bli løst, så du bør tenke deg nøye om,
+          og ikke gjette vilt.
+        </p>
+      </section>
+
+      <section class="gift-grid" aria-label="Gaver" data-home-screen hidden>
+        <article class="gift-card" data-gift-card="3">
+          <div class="gift-topline">
+            <span class="gift-number">Gave 3</span>
+            <span class="gift-status" data-card-status="3">Skjult</span>
+          </div>
+          <button class="gift-box" type="button" data-open-gift="3" aria-label="Åpne oppgave for gave 3">
+            <span class="gift-lid"></span>
+            <span class="gift-ribbon"></span>
+            <span class="gift-bow"></span>
+          </button>
+          <p class="card-copy" data-card-copy="3">Minst, lettest å løse, men nyttig.</p>
+        </article>
+
+        <article class="gift-card" data-gift-card="2">
+          <div class="gift-topline">
+            <span class="gift-number">Gave 2</span>
+            <span class="gift-status" data-card-status="2">Skjult</span>
+          </div>
+          <button class="gift-box" type="button" data-open-gift="2" aria-label="Åpne oppgave for gave 2">
+            <span class="gift-lid"></span>
+            <span class="gift-ribbon"></span>
+            <span class="gift-bow"></span>
+          </button>
+          <p class="card-copy" data-card-copy="2">Låses opp etter gave 3.</p>
+        </article>
+
+        <article class="gift-card" data-gift-card="1">
+          <div class="gift-topline">
+            <span class="gift-number">Gave 1</span>
+            <span class="gift-status" data-card-status="1">Skjult</span>
+          </div>
+          <button class="gift-box" type="button" data-open-gift="1" aria-label="Åpne oppgave for gave 1">
+            <span class="gift-lid"></span>
+            <span class="gift-ribbon"></span>
+            <span class="gift-bow"></span>
+          </button>
+          <p class="card-copy" data-card-copy="1">Låses opp etter gave 2.</p>
+        </article>
+      </section>
+
+      <section class="detail-screen" data-detail-screen hidden aria-live="polite">
+        <button class="back-button" type="button" data-back-button>Tilbake til gavene</button>
+        <article class="detail-panel" data-detail-card>
+          <div class="gift-topline">
+            <span class="gift-number" data-detail-title>Gave</span>
+            <span class="gift-status" data-detail-status>Skjult</span>
+          </div>
+          <p class="clue" data-detail-clue></p>
+          <div class="answer-meta">
+            <span class="word-count-badge" data-word-count></span>
+            <span class="hint-info-badge" data-hint-info hidden></span>
+            <span class="attempts-badge" data-attempts-left></span>
+          </div>
+          <div class="answer-pattern" data-answer-pattern aria-label="Svarmønster"></div>
+          <form class="answer-form" data-detail-form novalidate>
+            <label for="gift-answer">Ditt løsningsforslag</label>
+            <div class="answer-row">
+              <input id="gift-answer" name="answer" type="text" autocomplete="off" placeholder="Skriv svaret her">
+              <button type="submit">Prøv</button>
+            </div>
+            <p class="feedback" data-detail-feedback aria-live="polite"></p>
+          </form>
+          <div class="extra-hint" data-extra-hint hidden>
+            <button class="hint-button" type="button" data-hint-button>Hint</button>
+            <p data-hint-text hidden>Ikke vær fyllesyk om du velger denne :)</p>
+          </div>
+          <div class="reveal" data-detail-reveal hidden></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
