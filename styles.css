@@ -361,17 +361,39 @@ h1 {
 .answer-meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
 .answer-meta span {
-  padding: 7px 10px;
+  min-height: 42px;
+  display: inline-grid;
+  place-items: center;
+  padding: 7px 12px;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
   background: rgba(255, 255, 255, 0.06);
   font-size: 0.85rem;
   font-weight: 800;
+}
+
+.answer-meta span[hidden] {
+  display: none;
+}
+
+.word-count-badge {
+  min-width: 92px;
+  border-color: rgba(243, 199, 109, 0.62);
+  color: var(--gold);
+  background: rgba(243, 199, 109, 0.12);
+  text-align: center;
+}
+
+.hint-info-badge {
+  border-color: rgba(154, 240, 200, 0.42);
+  color: var(--success);
+  background: rgba(8, 31, 25, 0.42);
 }
 
 .answer-pattern {
@@ -470,6 +492,70 @@ h1 {
   background: var(--success);
   font-weight: 900;
   cursor: pointer;
+}
+
+.more-button {
+  margin-top: 14px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #1e1200;
+  background: linear-gradient(135deg, #f3c76d, #9af0c8);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.more-button:focus-visible {
+  outline: 3px solid rgba(154, 240, 200, 0.75);
+  outline-offset: 4px;
+}
+
+.more-content {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.more-content[hidden] {
+  display: none;
+}
+
+.more-section {
+  display: grid;
+  gap: 12px;
+}
+
+.more-section ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--cream);
+  line-height: 1.55;
+}
+
+.travel-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.travel-links a {
+  min-height: 36px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(243, 199, 109, 0.4);
+  border-radius: 999px;
+  padding: 0 12px;
+  color: var(--gold);
+  background: rgba(243, 199, 109, 0.1);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.travel-links a:hover {
+  border-color: rgba(154, 240, 200, 0.58);
+  color: var(--success);
 }
 
 .extra-hint p {
