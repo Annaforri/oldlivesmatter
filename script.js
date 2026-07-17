@@ -28,9 +28,16 @@ const gifts = [
         </div>
       </div>
     `,
-    extraHintAfter: 3,
-    extraHint:
-      "...hvor de fylles inn, bestemmes av B ≈ ∫ fra 0 til 5 av 2000 dx = [2000x] fra 0 til 5 = 2000 · 5 - 0 = 10 000 kr.",
+    extraHints: [
+      {
+        after: 3,
+        text: "Når rutene fylles, bestemmes det av oss.",
+      },
+      {
+        after: 4,
+        text: "Ruter i ref.",
+      },
+    ],
   },
   {
     id: "2",
@@ -48,25 +55,17 @@ const gifts = [
         </div>
       </div>
     `,
-    extraHints: [
-      {
-        after: 3,
-        text: "Når rutene fylles, bestemmes det av oss...",
-      },
-      {
-        after: 4,
-        text: "Rute i ref.",
-      },
-    ],
+    extraHintAfter: 4,
+    extraHint: "Ikke noe du også vil gjøre fyllesyk.",
   },
   {
     id: "3",
-    clue: "Ledetråd: Hallo, du ønsker deg jo dette. Det er ikke så vanskelig.",
+    clue: "Ledetråd: Varer så lenge teknologien rekker, og gjør varme sommerdager litt lettere.",
     answers: ["airkondition", "aircondition", "air condition", "airkondisjon"],
     title: "Gave 3 er låst opp",
     reveal: "Gaven er en valgfri aircondition til en verdi mellom 4000-5000 kroner.",
     extraHintAfter: 4,
-    extraHint: "Ikke vær fyllesyk om du velger denne :)",
+    extraHint: "Hallo, du ønsker deg jo dette. Du vet hva det er.",
   },
 ];
 
@@ -280,9 +279,9 @@ const updateGiftStatusBadges = () => {
       badge.textContent = "Skjult";
       cardCopy.textContent =
         gift.id === "1"
-          ? "Klikk deg inn for å prøve. Hint gis ved 3 feil."
+          ? "Klikk deg inn for å prøve. Hint gis ved 3 og 4 feil."
           : gift.id === "2"
-            ? "Klikk deg inn for å prøve. Hint gis ved 3 og 4 feil."
+            ? "Klikk deg inn for å prøve. Hint gis ved 4 feil."
             : "Minst, lettest å løse, men nyttig.";
     }
   });
@@ -334,7 +333,7 @@ const renderDetail = (gift) => {
   detailClue.textContent = gift.clue;
   wordCount.textContent = `Antall bokstaver: ${getLetterCount(displayAnswer)}`;
   hintInfo.textContent =
-    gift.id === "2"
+    gift.id === "1"
       ? "Hint gis ved 3 og 4 feil"
       : `Hint gis ved ${getFirstHintAttempt(gift)} feil`;
   hintInfo.hidden = gift.id === "3";
