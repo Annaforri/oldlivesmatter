@@ -55,7 +55,7 @@ const gifts = [
         </div>
       </div>
     `,
-    extraHintAfter: 4,
+    extraHintAfter: 3,
     extraHint: "Ikke noe du også vil gjøre fyllesyk.",
   },
   {
@@ -65,7 +65,7 @@ const gifts = [
     title: "Gave 3 er låst opp",
     reveal: "Gaven er en valgfri aircondition til en verdi mellom 4000-5000 kroner.",
     extraHintAfter: 4,
-    extraHint: "Hallo, du ønsker deg jo dette. Du vet hva det er.",
+    extraHint: "DU ØNSKER DEG DENNE.",
   },
 ];
 
@@ -281,7 +281,7 @@ const updateGiftStatusBadges = () => {
         gift.id === "1"
           ? "Klikk deg inn for å prøve. Hint gis ved 3 og 4 feil."
           : gift.id === "2"
-            ? "Klikk deg inn for å prøve. Hint gis ved 4 feil."
+            ? "Klikk deg inn for å prøve. Hint gis ved 3 feil."
             : "Minst, lettest å løse, men nyttig.";
     }
   });
