@@ -132,6 +132,38 @@ h1 {
   font-weight: 800;
 }
 
+.countdown {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 20;
+  min-width: 172px;
+  padding: 12px 14px;
+  display: grid;
+  gap: 2px;
+  border: 1px solid rgba(154, 240, 200, 0.42);
+  border-radius: 8px;
+  color: var(--success);
+  background: rgba(8, 31, 25, 0.72);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.26);
+}
+
+.countdown[hidden] {
+  display: none;
+}
+
+.countdown span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.countdown strong {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
 .gift-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -163,6 +195,21 @@ h1 {
 }
 
 .gift-card.locked .gift-box {
+  cursor: not-allowed;
+}
+
+.gift-card.failed,
+.detail-panel.failed {
+  border-color: rgba(255, 155, 155, 0.42);
+  background: rgba(0, 0, 0, 0.9);
+  filter: grayscale(1);
+}
+
+.gift-card.failed {
+  opacity: 0.82;
+}
+
+.gift-card.failed .gift-box {
   cursor: not-allowed;
 }
 

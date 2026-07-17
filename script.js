@@ -48,12 +48,20 @@ const gifts = [
         </div>
       </div>
     `,
-    extraHintAfter: 4,
-    extraHint: "Ikke vær fyllesyk om du velger denne :)",
+    extraHints: [
+      {
+        after: 3,
+        text: "Når rutene fylles, bestemmes det av oss...",
+      },
+      {
+        after: 4,
+        text: "Rute i ref.",
+      },
+    ],
   },
   {
     id: "3",
-    clue: "Ledetråd: Gaven varer så lenge teknologien rekker. Den gjør varme dager snillere, rommet roligere og sommeren litt lettere å elske.",
+    clue: "Ledetråd: Hallo, du ønsker deg jo dette. Det er ikke så vanskelig.",
     answers: ["airkondition", "aircondition", "air condition", "airkondisjon"],
     title: "Gave 3 er låst opp",
     reveal: "Gaven er en valgfri aircondition til en verdi mellom 4000-5000 kroner.",
@@ -66,6 +74,7 @@ const maxAttempts = 5;
 const unlockedDurationMs = 60 * 60 * 1000;
 const storageKey = "bursdagsgaver-state-v4";
 const gateStorageKey = "bursdagsgaver-gate-open";
+const gateStartedAtKey = "bursdagsgaver-gate-started-at";
 const gateAnswers = ["carl", "carl fredrik"];
 const unlockRequirements = {
   1: "2",
@@ -186,6 +195,8 @@ const gateForm = document.querySelector("[data-gate-form]");
 const gateInput = gateForm.querySelector("input");
 const gateFeedback = document.querySelector("[data-gate-feedback]");
 const homeScreens = document.querySelectorAll("[data-home-screen]");
+const countdown = document.querySelector("[data-countdown]");
+const countdownTime = document.querySelector("[data-countdown-time]");
 const detailScreen = document.querySelector("[data-detail-screen]");
 const detailCard = document.querySelector("[data-detail-card]");
 const detailTitle = document.querySelector("[data-detail-title]");
@@ -211,11 +222,34 @@ const setHomeVisible = (isVisible) => {
     screen.hidden = !isVisible;
   });
   detailScreen.hidden = isVisible;
+  countdown.hidden = sessionStorage.getItem(gateStorageKey) !== "true";
+};
+
+const formatCountdown = (milliseconds) => {
+  const totalSeconds = Math.max(Math.ceil(milliseconds / 1000), 0);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+};
+
+const updateCountdown = () => {
+  const startedAt = Number(sessionStorage.getItem(gateStartedAtKey));
+  const remaining = unlockedDurationMs - (Date.now() - startedAt);
+
+  countdownTime.textContent = formatCountdown(remaining);
+};
+
+const startCountdown = () => {
+  updateCountdown();
+  window.setInterval(updateCountdown, 1000);
 };
 
 const openGate = () => {
   sessionStorage.setItem(gateStorageKey, "true");
+  sessionStorage.setItem(gateStartedAtKey, String(Date.now()));
   setHomeVisible(true);
+  startCountdown();
 };
 
 const updateGiftStatusBadges = () => {
@@ -227,13 +261,18 @@ const updateGiftStatusBadges = () => {
     const cardCopy = document.querySelector(`[data-card-copy="${gift.id}"]`);
     const requiredGiftId = unlockRequirements[gift.id];
     const isAvailable = !requiredGiftId || giftState[requiredGiftId].unlocked;
+    const hasFailed = !giftState[gift.id].unlocked && giftState[gift.id].attempts >= maxAttempts;
 
-    card.classList.toggle("locked", !giftState[gift.id].unlocked && !isAvailable);
+    card.classList.toggle("locked", !giftState[gift.id].unlocked && !isAvailable && !hasFailed);
     card.classList.toggle("unlocked", giftState[gift.id].unlocked);
+    card.classList.toggle("failed", hasFailed);
 
     if (giftState[gift.id].unlocked) {
       badge.textContent = "Åpnet";
       cardCopy.textContent = "Denne gaven er åpnet.";
+    } else if (hasFailed) {
+      badge.textContent = "Lukket";
+      cardCopy.textContent = "Ingen forsøk igjen.";
     } else if (!isAvailable) {
       badge.textContent = "Låst";
       cardCopy.textContent = `Låses opp etter gave ${requiredGiftId}.`;
@@ -243,7 +282,7 @@ const updateGiftStatusBadges = () => {
         gift.id === "1"
           ? "Klikk deg inn for å prøve. Hint gis ved 3 feil."
           : gift.id === "2"
-            ? "Klikk deg inn for å prøve. Hint gis ved 4 feil."
+            ? "Klikk deg inn for å prøve. Hint gis ved 3 og 4 feil."
             : "Minst, lettest å løse, men nyttig.";
     }
   });
@@ -255,8 +294,29 @@ const getLockedMessage = (gift) => {
   return `Du må åpne gave ${requiredGiftId} før du kan prøve gave ${gift.id}.`;
 };
 
+const getHintStages = (gift) => {
+  if (gift.extraHints) {
+    return gift.extraHints;
+  }
+
+  return [
+    {
+      after: gift.extraHintAfter || maxAttempts - 1,
+      text: gift.extraHint || "",
+    },
+  ];
+};
+
+const getFirstHintAttempt = (gift) =>
+  Math.min(...getHintStages(gift).map((hint) => hint.after));
+
+const getCurrentHint = (gift, state) =>
+  getHintStages(gift)
+    .filter((hint) => state.attempts >= hint.after)
+    .at(-1)?.text || "";
+
 const shouldShowHint = (gift, state) =>
-  state.attempts >= (gift.extraHintAfter || maxAttempts - 1) && !state.unlocked;
+  state.attempts >= getFirstHintAttempt(gift) && !state.unlocked;
 
 const renderDetail = (gift) => {
   closeExpiredGifts();
@@ -268,11 +328,15 @@ const renderDetail = (gift) => {
 
   activeGift = gift;
   detailCard.classList.toggle("unlocked", state.unlocked);
+  detailCard.classList.toggle("failed", !state.unlocked && state.attempts >= maxAttempts);
   detailTitle.textContent = `Gave ${gift.id}`;
   detailStatus.textContent = state.unlocked ? "Åpnet" : "Skjult";
   detailClue.textContent = gift.clue;
   wordCount.textContent = `Antall bokstaver: ${getLetterCount(displayAnswer)}`;
-  hintInfo.textContent = `Hint gis ved ${gift.extraHintAfter} feil`;
+  hintInfo.textContent =
+    gift.id === "2"
+      ? "Hint gis ved 3 og 4 feil"
+      : `Hint gis ved ${getFirstHintAttempt(gift)} feil`;
   hintInfo.hidden = gift.id === "3";
   attemptsLeft.textContent = `${remainingAttempts} av ${maxAttempts} forsøk igjen`;
   renderAnswerPattern(answerPattern, displayAnswer);
@@ -282,7 +346,7 @@ const renderDetail = (gift) => {
   input.disabled = state.unlocked || remainingAttempts === 0;
   submitButton.disabled = state.unlocked || remainingAttempts === 0;
   extraHint.hidden = !shouldShowExtraHint;
-  hintText.textContent = gift.extraHint || "";
+  hintText.textContent = getCurrentHint(gift, state);
   hintText.hidden = true;
   reveal.hidden = !state.unlocked;
 
@@ -326,7 +390,12 @@ giftState = loadGiftState();
 updateGiftStatusBadges();
 
 if (sessionStorage.getItem(gateStorageKey) === "true") {
+  if (!sessionStorage.getItem(gateStartedAtKey)) {
+    sessionStorage.setItem(gateStartedAtKey, String(Date.now()));
+  }
+
   setHomeVisible(true);
+  startCountdown();
 }
 
 gateForm.addEventListener("submit", (event) => {
@@ -377,7 +446,7 @@ form.addEventListener("submit", (event) => {
         : `Ikke helt. Du har ${remainingAttempts} forsøk igjen.`;
     feedback.classList.remove("success");
     extraHint.hidden = !shouldShowHint(activeGift, state);
-    hintText.textContent = activeGift.extraHint || "";
+    hintText.textContent = getCurrentHint(activeGift, state);
     hintText.hidden = true;
     input.value = "";
     saveGiftState();
@@ -393,6 +462,8 @@ form.addEventListener("submit", (event) => {
     );
 
     if (remainingAttempts === 0) {
+      detailCard.classList.add("failed");
+      detailStatus.textContent = "Lukket";
       input.disabled = true;
       submitButton.disabled = true;
     }
